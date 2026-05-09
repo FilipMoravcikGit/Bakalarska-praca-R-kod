@@ -67,8 +67,8 @@ simulacia_GGnm <- function(arrivalsdist, servicedist, n, m, max_time) {
           servers <- servers - 1
           next_departures <- append(next_departures, Inf)
         }
-      log <- rbind(log, data.frame(time, event = "departure", queue, server = servers))
       }
+      log <- rbind(log, data.frame(time, event = "departure", queue, server = servers))
       if (servers ==0) {
         next_departures <- next_departures[!is.infinite(next_departures)]
       }
@@ -122,7 +122,7 @@ charakteristiky_simulacie <- function(arrivalsdist, servicedist, n, m, max_time,
     service_start_times <- log$time[log$event == "departure" & log$server == n]
     matched_length <- min(length(queue_join_times),length(service_start_times))
     queue_wait_times <- service_start_times[seq_len(matched_length)] - queue_join_times[seq_len(matched_length)]
-    queue_wait_avg <- sum(queue_wait_times) / number_entered
+    queue_wait_avg <- sum(queue_wait_times) / (number_entered - log$queue[nrow(log)])
     avg_time_in_system <- queue_wait_avg + servicetime_avg
     results[r, ] <- c(
       system_avg,
@@ -148,4 +148,3 @@ charakteristiky_simulacie <- function(arrivalsdist, servicedist, n, m, max_time,
 charakteristiky_simulacie(arrivalsdist = function() rexp(1, rate = 3),
                           servicedist = function() rexp(1, rate = 4),
                           n = 1, m = Inf, max_time = 1000, reps = 5)
-
